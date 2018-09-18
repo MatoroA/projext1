@@ -1,29 +1,23 @@
 page-task {
 
-    .col{
-        border: 1px solid blue;
-        padding: 10px;
-        margin: 5px;
-    }
-    .left{
-        width: 95%;
-        height: 150px;
-        position: relative;
-        float: left;
-        margin: auto;
+    
+    
+    .head{
+        border: 1px solid #2F4F4F;
+        height: 2em;
+        background-color: white;
+        color: black;
         text-align: center;
-        background-color: rgb(218, 253, 253);
-        margin: 5px;
+        margin-top: 10px;
     }
-    .left button{
-        margin-top: 93px;
+    .task-name{
+        border: 1px solid ;
+        height: 5em;
+        text-align: center;
+        background-color: white;
+    }
+    #taskName{
+        font-size: 1.7em;
     }
     
-    .instruction{
-        height: 60px;
-        border: 1px solid red;
-    }
-    .button{
-        background-color: grey;
-    }
 }

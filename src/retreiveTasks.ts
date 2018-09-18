@@ -4,51 +4,77 @@ export class tasksName{
 
     tasksNames = [{
         taskName:'',
+        timer:"",
+        timerType:""
     }]
 
-    tasksInstruction= [{
-        taskName:'',
+    userClickedTask = [{
+        taskName:"",
+        timer:"",
+        timerType:""
     }]
-    counting : number;
+
+    tasks = [{
+        taskName:'',
+        timer:"",
+        timerType:""
+    }]
+    
+    counter = 0;
 
     constructor(){
         
-        this.counting = 0;
-        firebase.database().ref('/tasksInstruction/').on("value", (snapshot) =>{
-            
-            this.tasksInstruction  = []
-                
-            snapshot.forEach(e => {
-                console.log(e.val().taskName)
-                    this.tasksInstruction.push({taskName: e.val().taskName})
-            });
-          })
-
-
 
           firebase.database().ref('/tasks/').on("value", (snapshot) =>{
             
             this.tasksNames  = []
-                console.log("Array not empty")
             snapshot.forEach(e => {
-                    this.tasksNames.push({taskName: e.val().taskName})
+                    console.log(e.val().taskName)
+                    this.tasksNames.push({taskName: e.val().taskName, timer: e.val().timer, timerType : e.val().timerType})
+            });
+          })
+          this.userTask()
+    }
+
+    userTask(){
+ 
+        var user = firebase.auth().currentUser;
+        var userID = user.uid;
+        
+        firebase.database().ref('/'+userID+'/').on("value", (snapshot) =>{
+                
+            snapshot.forEach(e => {
+                    this.userClickedTask.push({taskName: e.val().taskName, timer: e.val().timer, timerType : e.val().timerType})
+                    console.log(e.val().taskName)
             });
           })
 
+          var count;
 
+          for( count = 0; count < this.tasksNames.length; count++){
+
+                this.userClickedTask.forEach( e=> {
+
+                        if( e.taskName != ''){
+                            
+                            if(e.taskName == this.tasksNames[count].taskName )
+                            return;
+                            
+                            this.counter +=1;
+                        }
+                })
+
+                if((this.userClickedTask.length-1) == this.counter)
+                    this.tasks.push({taskName : this.tasksNames[count].taskName, timer: this.tasksNames[count].timer , timerType: this.tasksNames[count].timerType})
+                
+                    
+                this.counter = 0;
+          }
     }
 
     returnTask(){
-        if(this.tasksNames == [])
-            console.log("Array empty..")
-        else
-            console.log("Its not empty")
-
-        return this.tasksNames;
-    }
-
-    returnInstruction(){
-        return this.tasksInstruction;
+        
+        return this.tasks;
     }
 
 }

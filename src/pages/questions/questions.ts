@@ -1,16 +1,13 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular';
 import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
-import {Observable} from 'rxjs/Observable'
+import {Observable} from 'rxjs/Observable';
+import { Platform } from 'ionic-angular';
 import 'rxjs/add/observable/interval';
+import { tasksTaken } from '../../userProjectsTaken';
 
 
-/**
- * Generated class for the QuestionsPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+
 declare var firebase;
 @IonicPage()
 @Component({
@@ -20,12 +17,15 @@ declare var firebase;
 export class QuestionsPage {
 
   timerVar;
-  timerVar1;
-  timerVar2;
-  timerVal;
   timerS:number;
   timerM:number;
   timerH:number;
+
+  timer : number;
+  timerType : string;
+
+
+  objectUser : tasksTaken;
 
   
 
@@ -39,15 +39,20 @@ export class QuestionsPage {
 
   arrayAnswers = []
   score = 0;
-
+  time =0;
   public anArray:any=[];
 
   countingQuestions = 0;
-  constructor(public navCtrl: NavController, 
-    public navParams: NavParams, private fb   : FormBuilder) {
+  constructor(public navCtrl: NavController,public platform: Platform, 
+    public navParams: NavParams, private fb   : FormBuilder,public toastCtrl: ToastController) {
 
     this.taskName = navParams.get("task")
+    this.timer = navParams.get("time")
+    this.timerType = navParams.get("timerType")
 
+    console.log(this.timer)
+    this.objectUser = new tasksTaken();
+    this.objectUser.userTaskTaken(this.taskName);
     
 
     firebase.database().ref('/'+this.taskName+'/').on("value", (snapshot) =>{
@@ -64,18 +69,17 @@ export class QuestionsPage {
 
     })
 
-
-    this.timerS = 30;
-    this.timerM = 0;
-    this.timerH = 0;
-    this.startTimer();
-
+      if( this.timerType === 'Seconds'){
+          this.startTimer( this.timer, 0 , 0);
+      }
+      if( this.timerType === 'Minutes'){
+        this.startTimer( 0, this.timer , 0);
+      }
+      if( this.timerType === 'Hour'){
+        this.startTimer( 0, 0 , this.timer);
+      }
   }
 
-  answers(oo){
-    console.dir(oo)
-    console.log("it will work..")
-  }
 
   goTo(){
     console.log('this.anArray',this.anArray);
@@ -86,7 +90,6 @@ export class QuestionsPage {
 
         if(this.anArray[counter] == this.arrayAnswers [counter])
             this.score +=1;
-
       }
 
 
@@ -94,32 +97,45 @@ export class QuestionsPage {
     this.navCtrl.push("ScorePage",{score: this.score})
   }
 
-  startTimer(){
+  startTimer( seconds , minutes , hour){
+
+    this.timerS = seconds;
+    this.timerM = minutes;
+    this.timerH = hour;
   
   
     this.timerVar = Observable.interval(1000).subscribe(() =>{
+      
+
+      if( (this.timerS === 0) && (this.timerM > 0) ){
+        this.timerM -=1;
+        this.timerS = 60;
+      }
+
+      if( (this.timerS === 0) && (this.timerM === 0)){
+
+        if( this.timerH > 0 ){
+          this.timerH -=1;
+          this.timerM = 59;
+          this.timerS = 60;
+        }
+        
+      }
+
+      if( (this.timerM == 0) && (this.timerS == 0) && this.timerH > 0){
+        console.log(" is greater than 0")
+          this.timerH -=1;
+          this.timerM = 59;
+          this.timerS = 60;
+      }
+
       this.timerS--;
-      if(this.timerS == 0){
-        // this.timerS = 59;
-        this.timerVar.unsubscribe()
-        this.goTo();
+      if( (this.timerS === 0 ) && (this.timerM  === 0) && ( this.timerH === 0) ){
+        this.timerVar.unsubscribe();
+        this.navCtrl.push("ScorePage",{score: this.score})
 
       }
     })
-  
-    this.timerVar1 = Observable.interval(60000).subscribe(() =>{
-      this.timerM--;
-      if(this.timerM == 0){
-        this.timerM = 59;
-      }
-    })
-    this.timerVar2 = Observable.interval(3600000).subscribe(() =>{
-      this.timerH--;
-      if(this.timerH == 0){
-        this.timerH--;
-      }
-    })
-  
     
   }
 }

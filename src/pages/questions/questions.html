@@ -1,9 +1,9 @@
 
 <ion-header>
 
-  <ion-navbar>
+  <ion-navbar text-center hideBackButton="true">
     <ion-title text-center>{{taskName}} <br> {{timerH}} : {{timerM}} : {{timerS}}
-
+      
 
       </ion-title>
   </ion-navbar>
@@ -13,37 +13,31 @@
 
 <ion-content padding>
 
-    <ion-card *ngFor="let item of questions; let idx = index" >
-            
-      <ion-card-header *ngIf="item.questionType == 'FIN'">
-        {{item.question}}?
-      </ion-card-header>
+    <div class="task" *ngFor = "let item of questions; let idx = index">
 
-      <ion-card-header *ngIf="item.questionType == 'TF'">
-          {{item.question}}?
-        </ion-card-header>
-    
-      <ion-card-content *ngIf="item.questionType == 'FIN'">
-          <ion-input type="text" value="" [(ngModel)]="anArray[idx]"></ion-input>
-      </ion-card-content> 
+        <div class="head" *ngIf=" item.questions != ''">
+                {{item.question}}?
+        </div>
+        <div class="answer1" *ngIf=" item.questions != '' && item.questionType == 'FIN'">
+                <ion-input type="text" value="" [(ngModel)]="anArray[idx]"></ion-input>
+        </div>
 
-      <ion-card-content *ngIf="item.questionType == 'TF'">
-          <ion-row radio-group [(ngModel)]="anArray[idx]">
+        <div class="answer1" *ngIf=" item.questions != '' && item.questionType == 'TF'">
+                <ion-row radio-group [(ngModel)]="anArray[idx]">
 
-              <ion-item no-lines>
-                  <ion-label> True</ion-label>
-                  <ion-radio value="True"></ion-radio>
-              </ion-item>
-    
-              <ion-item>
-                  <ion-label> False</ion-label>
-                  <ion-radio value="False"></ion-radio>
-                </ion-item>
-          </ion-row>
-      </ion-card-content>
-      </ion-card>
+                        <ion-item no-lines>
+                            <ion-label> True</ion-label>
+                            <ion-radio value="true"></ion-radio>
+                        </ion-item>
+              
+                        <ion-item>
+                            <ion-label> False</ion-label>
+                            <ion-radio value="false"></ion-radio>
+                          </ion-item>
+                    </ion-row>
+        </div>
 
-
+    </div>
       <button ion-button full  (click)="goTo()">let's go</button>
       
 </ion-content>

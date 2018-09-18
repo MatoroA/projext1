@@ -32,11 +32,6 @@ export class RegisterPage {
 
     })
   }
-
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad RegisterPage');
-  }
-
   register(ob){
     firebase.auth().createUserWithEmailAndPassword(ob.value.email,ob.value.password).then(User =>{
       this.navCtrl.push("TaskPage");

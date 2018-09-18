@@ -1,12 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
-
-/**
- * Generated class for the ScorePage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+import { IonicPage, NavController, NavParams, ToastController, Platform } from 'ionic-angular';
 
 @IonicPage()
 @Component({
@@ -15,14 +8,16 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 })
 export class ScorePage {
   score = 0
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController, public toastCtrl: ToastController, 
+    public platform: Platform , public navParams: NavParams) {
       this.score = navParams.get("score")
       console.log(this.score)
-
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad ScorePage');
   }
+
+  
 
 }

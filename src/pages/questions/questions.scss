@@ -2,4 +2,29 @@ page-questions {
     .input{
         border-bottom: 1px solid grey;
     }
+    .card-header{
+        background-color: grey;
+        color: white;
+    }
+
+    .button{
+        background-color: rgba(0, 128, 0, 0.479);
+        width: 94%;
+        bottom: 0;
+        position: fixed;
+    }
+    .head{
+        border: 1px solid #2F4F4F;
+        height: auto;
+        padding: 3px;
+        text-align: center;
+        margin-top: 10px;
+    }
+    .answer1{
+        border: 1px solid ;
+        height: auto;
+    }
+    .input{
+        border-bottom: 1px solid red;
+    }
 }
