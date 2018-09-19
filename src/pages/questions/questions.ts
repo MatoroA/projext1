@@ -5,6 +5,8 @@ import {Observable} from 'rxjs/Observable';
 import { Platform } from 'ionic-angular';
 import 'rxjs/add/observable/interval';
 import { tasksTaken } from '../../userProjectsTaken';
+import { marksAndComments } from '../../uploadMarksAndComments';
+import { selectedTaskName } from '../../taskName';
 
 
 
@@ -26,7 +28,7 @@ export class QuestionsPage {
 
 
   objectUser : tasksTaken;
-
+  uploadMarks : marksAndComments;
   
 
   public solution 	: FormGroup;
@@ -42,16 +44,22 @@ export class QuestionsPage {
   time =0;
   public anArray:any=[];
 
+  checkPoint = 0;
   countingQuestions = 0;
   constructor(public navCtrl: NavController,public platform: Platform, 
     public navParams: NavParams, private fb   : FormBuilder,public toastCtrl: ToastController) {
+
+
+    this.objectUser = new tasksTaken();
+    this.uploadMarks = new marksAndComments();
+    
 
     this.taskName = navParams.get("task")
     this.timer = navParams.get("time")
     this.timerType = navParams.get("timerType")
 
     console.log(this.timer)
-    this.objectUser = new tasksTaken();
+    
     this.objectUser.userTaskTaken(this.taskName);
     
 
@@ -95,6 +103,7 @@ export class QuestionsPage {
 
     this.timerVar.unsubscribe()
     this.navCtrl.push("ScorePage",{score: this.score})
+    this.uploadMarks.uploadMarks(this.score, this.taskName);
   }
 
   startTimer( seconds , minutes , hour){
@@ -111,19 +120,7 @@ export class QuestionsPage {
         this.timerM -=1;
         this.timerS = 60;
       }
-
-      if( (this.timerS === 0) && (this.timerM === 0)){
-
-        if( this.timerH > 0 ){
-          this.timerH -=1;
-          this.timerM = 59;
-          this.timerS = 60;
-        }
-        
-      }
-
       if( (this.timerM == 0) && (this.timerS == 0) && this.timerH > 0){
-        console.log(" is greater than 0")
           this.timerH -=1;
           this.timerM = 59;
           this.timerS = 60;
@@ -133,7 +130,11 @@ export class QuestionsPage {
       if( (this.timerS === 0 ) && (this.timerM  === 0) && ( this.timerH === 0) ){
         this.timerVar.unsubscribe();
         this.navCtrl.push("ScorePage",{score: this.score})
+        
+        this.uploadMarks.uploadMarks(this.score, this.taskName);
+        
 
+        
       }
     })
     

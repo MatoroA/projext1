@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastController } from 'ionic-angular';
-import { tasksName } from '../../retreiveTasks';
+import { retrieveTask } from '../../retreiveTasks';
 
 /**
  * Generated class for the RegisterPage page.
@@ -19,11 +19,12 @@ import { tasksName } from '../../retreiveTasks';
 })
 export class RegisterPage {
   person : FormGroup;
-  object : tasksName;
+  object : retrieveTask;
+
   constructor(public navCtrl: NavController, public toastCtrl: ToastController,
      fb : FormBuilder, public navParams: NavParams) {
   
-      this.object = new tasksName();
+      this.object = new retrieveTask();
     this.person = fb.group({
       name: ['', Validators.compose([Validators.required ,Validators.pattern('[a-zA-Z ]*')])],
       surname: ['',Validators.compose([Validators.required ,Validators.pattern('[a-zA-Z ]*')])],
@@ -32,10 +33,19 @@ export class RegisterPage {
 
     })
   }
+
+
+  
   register(ob){
+
+    console.log( ob.value.email)
     firebase.auth().createUserWithEmailAndPassword(ob.value.email,ob.value.password).then(User =>{
       this.navCtrl.push("TaskPage");
  
+      var databese = firebase.database();
+    databese.ref('/registeredUsers/').push({ fname: ob.value.name, lname: ob.value.surname
+    , email: ob.value.email, checkPoint: ''});
+
    }).catch((error)=> {
     // Handle Errors here.
     var errorCode = error.code;

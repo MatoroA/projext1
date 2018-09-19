@@ -1,8 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
-import { IonicPage, NavController, NavParams, ToastController, Platform, AlertController } from 'ionic-angular';
-import { tasksName } from '../../retreiveTasks';
+import { IonicPage, NavController, NavParams, ToastController, AlertController } from 'ionic-angular';
+import { retrieveTask } from '../../retreiveTasks';
 import { Navbar } from 'ionic-angular/navigation/nav-interfaces';
-import { tasksTaken } from '../../userProjectsTaken';
 
 declare var firebase;
 @IonicPage()
@@ -15,21 +14,14 @@ export class TaskPage {
 
   @ViewChild('navbar') navBar: Navbar;
   task 
-  instruction
-  objectTask : tasksName;
-  objectUser : tasksTaken;
-  signOutPoint = 0
-  backButtonCounter =0;
-  platform
+  objectTask : retrieveTask;
 
   constructor(public navCtrl: NavController,private alertCtrl: AlertController,
-    public navParams: NavParams,platform: Platform) {
+    public navParams: NavParams) {
     
-    this.objectTask = new tasksName();
+    this.objectTask = new retrieveTask();
     this.task = this.objectTask.returnTask();
 
-    console.log( this.task)
-    this.platform = platform;
 
   }
   questionsPage(type, timer, timerType){
